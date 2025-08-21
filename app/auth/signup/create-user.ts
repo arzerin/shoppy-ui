@@ -22,13 +22,19 @@ export default async function createUser(_prevState: any, formData: FormData) {
     //body: formData,
     body: JSON.stringify({ email, password }),
   });
-  
+
   const parsedRes = await res.json();
   
-  console.log('Response:', parsedRes);
+  //console.log('Response:', parsedRes);
 
   if (!res.ok) {
+    console.log('Error Message:', parsedRes.message[0]);
+
+    const msg = Array.isArray(parsedRes.message) ? parsedRes.message.join(', ') : parsedRes.message;
+    return { error: msg || 'Signup failed' };
+
     return { error: getErrorMessage(parsedRes) };
   }
-  redirect("/");
+  //return { error: '' };
+  redirect("/auth/login?success=1");
 }
