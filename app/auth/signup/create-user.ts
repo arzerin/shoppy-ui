@@ -25,7 +25,7 @@ export default async function createUser(_prevState: any, formData: FormData) {
 
   const parsedRes = await res.json();
   
-  //console.log('Response:', parsedRes);
+  console.log('User Server Response:', parsedRes);//User Server Response: { email: 'zerin8@bdbooking.com', id: 20 }
 
   if (!res.ok) {
     console.log('Error Message:', parsedRes.message[0]);
@@ -36,5 +36,10 @@ export default async function createUser(_prevState: any, formData: FormData) {
     return { error: getErrorMessage(parsedRes) };
   }
   //return { error: '' };
-  redirect("/auth/login?success=1");
+  if (parsedRes.id) {
+    redirect("/auth/login?success=1&id="+parsedRes.id);
+  } else{
+    redirect("/auth/login?success=1");
+  }
+  
 }
