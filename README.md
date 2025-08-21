@@ -2,6 +2,9 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+npx create-next-app@latest
+npm install --save @mui/material @emotion/react @emotion/styled @mui/material-nextjs @emotion/cache
+
 First, run the development server:
 
 ```bash
