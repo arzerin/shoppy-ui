@@ -6,6 +6,10 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 //import { ThemeProvider } from "@emotion/react";
 import darkTheme from "./dark.theme";
 import { Container, CssBaseline, ThemeProvider} from "@mui/material";
+import Header from "./header/header";
+
+import Providers from "./providers";
+import authenticated from "./auth/authenticated";
 
 
 const geistSans = Geist({
@@ -23,27 +27,50 @@ export const metadata: Metadata = {
   description: "Building NextJS Demo App",
 };
 
-export default function RootLayout({
+const inter = Inter({ subsets: ["latin"] });
+
+// export default function RootLayoutX({
+//   children,
+// }: Readonly<{
+//   children: React.ReactNode;
+// }>) {
+//   return (
+//     <html lang="en">
+//       <body
+//         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+//       >
+//         <AppRouterCacheProvider>
+//           <ThemeProvider theme={darkTheme}>
+//             <CssBaseline />
+//             <Header />
+//             <Container>
+//                 {children}
+//             </Container>
+            
+//           </ThemeProvider>
+
+//         </AppRouterCacheProvider>
+        
+//       </body>
+//     </html>
+//   );
+// }
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isAuthenticated = await authenticated();
+
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <AppRouterCacheProvider>
-          <ThemeProvider theme={darkTheme}>
-            <CssBaseline />
-            <Container>
-                {children}
-            </Container>
-            
-          </ThemeProvider>
-
-        </AppRouterCacheProvider>
-        
+      <body className={inter.className}>
+        <Providers authenticated={isAuthenticated}>
+          <CssBaseline />
+          <Header />
+          <Container>{children}</Container>
+        </Providers>
       </body>
     </html>
   );
