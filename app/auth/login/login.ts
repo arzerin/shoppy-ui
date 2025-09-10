@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { FormError } from "@/app/common/interfaces/form-error.interface";
 import { API_URL } from "@/app/common/constants/api";
 import { getErrorMessage } from "@/app/common/util/errors";
+import { AUTHENTICATION_COOKIE } from "../auth-cookie";
 
 
 export default async function login(_prevState: FormError, formData: FormData) {
@@ -37,23 +38,37 @@ export default async function login(_prevState: FormError, formData: FormData) {
 //   }
 // };
 
-async function setAuthCookie(response: Response) {
-  const setCookieHeader = response.headers.get("set-cookie");
-  if (!setCookieHeader) return;
+// async function setAuthCookie(response: Response) {
+//   const setCookieHeader = response.headers.get("set-cookie");
+//   if (!setCookieHeader) return;
 
-  // Extract the "Authentication" cookie value from the Set-Cookie header
-  const match = /(?:^|;|,)\s*Authentication=([^;,\s]+)/i.exec(setCookieHeader);
-  const token = match?.[1];
-  if (!token) return;
+//   // Extract the "Authentication" cookie value from the Set-Cookie header
+//   const match = /(?:^|;|,)\s*Authentication=([^;,\s]+)/i.exec(setCookieHeader);
+//   const token = match?.[1];
+//   if (!token) return;
 
-  const { exp } = jwtDecode<{ exp?: number }>(token);
+//   const { exp } = jwtDecode<{ exp?: number }>(token);
 
-  const store = await cookies();  // <-- await cookies()
-  store.set("Authentication", token, {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-    secure: process.env.NODE_ENV === "production",
-    ...(exp ? { expires: new Date(exp * 1000) } : {}),
-  });
-}
+//   const store = await cookies();  // <-- await cookies()
+//   store.set("Authentication", token, {
+//     httpOnly: true,
+//     sameSite: "lax",
+//     path: "/",
+//     secure: process.env.NODE_ENV === "production",
+//     ...(exp ? { expires: new Date(exp * 1000) } : {}),
+//   });
+// }
+
+const setAuthCookie = (response: Response) => {
+  const setCookieHeader = response.headers.get("Set-Cookie");
+  if (setCookieHeader) {
+    const token = setCookieHeader.split(";")[0].split("=")[1];
+    cookies().set({
+      name: AUTHENTICATION_COOKIE,
+      value: token,
+      secure: true,
+      httpOnly: true,
+      expires: new Date(jwtDecode(token).exp! * 1000),
+    });
+  }
+};

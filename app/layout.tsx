@@ -10,6 +10,8 @@ import Header from "./header/header";
 
 import Providers from "./providers";
 import authenticated from "./auth/authenticated";
+import logout from "./auth/logout";
+
 
 
 const geistSans = Geist({
@@ -68,7 +70,7 @@ export default async function RootLayout({
       <body className={inter.className}>
         <Providers authenticated={isAuthenticated}>
           <CssBaseline />
-          <Header />
+           <Header logout={logout} />
           <Container>{children}</Container>
         </Providers>
       </body>
