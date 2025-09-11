@@ -58,9 +58,10 @@ export const post = async (path: string, formData: FormData) => {
 //   return res.json();
 // };
 
-export const get = async <T>(path: string) => {
+export const get = async <T>(path: string, tags?: string[]) => {
   const res = await fetch(`${API_URL}/${path}`, {
     headers: { ...(await getAuthHeaders()) }, // <-- await here
+     next: { tags },
     cache: "no-store",
   });
   console.log(`GET ${API_URL}/${path} -> JSON Response:`, res);

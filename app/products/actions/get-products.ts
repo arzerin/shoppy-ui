@@ -5,5 +5,5 @@ import { Product } from "../interfaces/product.interface";
 
 export default async function getProducts() {
   //return get("products");
-  return get<Product[]>("products");
+  return get<Product[]>("products", ["products"]);
 }
