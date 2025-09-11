@@ -3,11 +3,10 @@ import { API_URL } from "../constants/api";
 import { getErrorMessage } from "./errors";
 
 // const getHeaders = () => ({
-//   Cookie: cookies().toString(),
-// });
 
-const getHeaders = async () => ({
-  Cookie: (await cookies()).toString(),
+
+export const getHeaders = () => ({
+  Cookie: cookies().toString(),
 });
 
 async function getAuthHeaders(): Promise<HeadersInit> {
@@ -41,12 +40,12 @@ export const post = async (path: string, formData: FormData) => {
   });
   const parsedRes = await res.json();
 
-  console.log(`${API_URL}/${path} -> JSON Response:`, parsedRes);
+  console.log(`${API_URL}/${path} -> JSON Response: `, parsedRes);
 
   if (!res.ok) {
     return { error: getErrorMessage(parsedRes) };
   }
-  return { error: "" };
+  return { error: "", data: parsedRes };
 };
 
 // export const get = async (path: string) => {
