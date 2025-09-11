@@ -49,11 +49,20 @@ export const post = async (path: string, formData: FormData) => {
   return { error: "" };
 };
 
-export const get = async (path: string) => {
+// export const get = async (path: string) => {
+//   const res = await fetch(`${API_URL}/${path}`, {
+//     headers: { ...(await getAuthHeaders()) }, // <-- await here
+//     cache: "no-store",
+//   });
+//   console.log(`GET ${API_URL}/${path} -> JSON Response:`, res);
+//   return res.json();
+// };
+
+export const get = async <T>(path: string) => {
   const res = await fetch(`${API_URL}/${path}`, {
     headers: { ...(await getAuthHeaders()) }, // <-- await here
     cache: "no-store",
   });
   console.log(`GET ${API_URL}/${path} -> JSON Response:`, res);
-  return res.json();
+  return res.json() as T;
 };
