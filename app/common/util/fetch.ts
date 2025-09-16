@@ -79,12 +79,26 @@ export const post = async (path: string, data: FormData | object) => {
 //   return res.json();
 // };
 
-export const get = async <T>(path: string, tags?: string[]) => {
-  const res = await fetch(`${API_URL}/${path}`, {
-    headers: { ...(await getAuthHeaders()) }, // <-- await here
-     next: { tags },
+// export const get = async <T>(path: string, tags?: string[]) => {
+//   const res = await fetch(`${API_URL}/${path}`, {
+//     headers: { ...(await getAuthHeaders()) }, // <-- await here
+//      next: { tags },
+//     cache: "no-store",
+//   });
+//   console.log(`GET ${API_URL}/${path} -> JSON Response:`, res);
+//   return res.json() as T;
+// };
+
+export const get = async <T>(
+  path: string,
+  tags?: string[],
+  params?: URLSearchParams
+) => {
+  const url = params ? `${API_URL}/${path}?` + params : `${API_URL}/${path}`;
+  const res = await fetch(url, {
+    headers: { ...(await getAuthHeaders()) },
+    next: { tags },
     cache: "no-store",
   });
-  console.log(`GET ${API_URL}/${path} -> JSON Response:`, res);
   return res.json() as T;
 };
