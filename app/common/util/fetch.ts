@@ -5,8 +5,12 @@ import { getErrorMessage } from "./errors";
 // const getHeaders = () => ({
 
 
-export const getHeaders = () => ({
-  Cookie: cookies().toString(),
+// export const getHeaders = () => ({
+//   Cookie: cookies().toString(),
+// });
+
+export const getHeaders = async (): Promise<HeadersInit> => ({
+  Cookie: (await cookies()).toString(),
 });
 
 async function getAuthHeaders(): Promise<HeadersInit> {
@@ -28,25 +32,43 @@ async function getAuthHeaders(): Promise<HeadersInit> {
   return headers;
 }
 
-export const post = async (path: string, formData: FormData) => {
+// export const post = async (path: string, formData: FormData) => {
+//   const res = await fetch(`${API_URL}/${path}`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//       ...(await getAuthHeaders()), // <-- await here
+//     },
+//     body: JSON.stringify(Object.fromEntries(formData)),
+//     cache: "no-store",
+//   });
+//   const parsedRes = await res.json();
+
+//   console.log(`${API_URL}/${path} -> JSON Response: `, parsedRes);
+
+//   if (!res.ok) {
+//     return { error: getErrorMessage(parsedRes) };
+//   }
+//   return { error: "", data: parsedRes };
+// };
+
+export const post = async (path: string, data: FormData | object) => {
+  const body = data instanceof FormData ? Object.fromEntries(data) : data;
   const res = await fetch(`${API_URL}/${path}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       ...(await getAuthHeaders()), // <-- await here
     },
-    body: JSON.stringify(Object.fromEntries(formData)),
-    cache: "no-store",
+    body: JSON.stringify(body),
   });
   const parsedRes = await res.json();
-
-  console.log(`${API_URL}/${path} -> JSON Response: `, parsedRes);
-
   if (!res.ok) {
     return { error: getErrorMessage(parsedRes) };
   }
   return { error: "", data: parsedRes };
 };
+
 
 // export const get = async (path: string) => {
 //   const res = await fetch(`${API_URL}/${path}`, {
